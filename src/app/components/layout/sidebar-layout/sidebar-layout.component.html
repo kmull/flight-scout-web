@@ -1,0 +1,40 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <mat-icon>flight_takeoff</mat-icon>
+      <span>Flight Scout</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard"
+         routerLinkActive="active"
+         class="nav-item">
+        <mat-icon>dashboard</mat-icon><span>Pulpit</span>
+      </a>
+      <a routerLink="/search"
+         routerLinkActive="active"
+         class="nav-item">
+        <mat-icon>search</mat-icon><span>Szukaj lotów</span>
+      </a>
+      <a routerLink="/alerts"
+         routerLinkActive="active"
+         class="nav-item">
+        <mat-icon>notifications_active</mat-icon><span>Alerty cenowe</span>
+      </a>
+      <a routerLink="/history"
+         routerLinkActive="active"
+         class="nav-item">
+        <mat-icon>history</mat-icon><span>Historia</span>
+      </a>
+    </nav>
+
+    <button class="logout-btn"
+            (click)="onLogout()">
+      <mat-icon>logout</mat-icon><span>Wyloguj</span>
+    </button>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

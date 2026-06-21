@@ -1,0 +1,108 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 138, 61, 0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(74, 144, 217, 0.15), transparent 40%),
+    linear-gradient(180deg, #0B1F3A 0%, #122A4D 100%);
+  padding: 24px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 36px;
+  border-radius: 16px;
+  background: #FAF7F2;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  mat-card-header {
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  mat-card-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0B1F3A;
+    letter-spacing: -0.5px;
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+
+  ::ng-deep .mdc-notched-outline,
+  ::ng-deep .mdc-notched-outline__leading,
+  ::ng-deep .mdc-notched-outline__notch,
+  ::ng-deep .mdc-notched-outline__trailing {
+    border: none !important;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: white;
+    border: 1.5px solid #D9D4C9;
+    border-radius: 12px;
+    transition: border-color 0.15s ease;
+  }
+
+  ::ng-deep .mat-mdc-form-field-focus-overlay {
+    background: transparent;
+  }
+
+  ::ng-deep .mdc-text-field--focused .mat-mdc-text-field-wrapper,
+  ::ng-deep .mat-mdc-text-field-wrapper:has(input:focus) {
+    border-color: #FF8A3D;
+  }
+
+  ::ng-deep .mat-mdc-form-field-infix {
+    padding: 12px 4px !important;
+    min-height: unset;
+  }
+
+  ::ng-deep .mat-mdc-form-field-error {
+    color: #D85A30 !important;
+    font-size: 13px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    margin-top: 2px;
+  }
+}
+
+button[type="submit"] {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-top: 8px;
+  letter-spacing: 0.3px;
+  background-color: #FF8A3D !important;
+  color: #0B1F3A !important;
+
+  &:hover {
+    background-color: #e87a2e !important;
+  }
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 24px;
+  color: #5C6B82;
+  font-size: 14px;
+
+  a {
+    color: #FF8A3D;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
