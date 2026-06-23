@@ -1,0 +1,155 @@
+<div class="search">
+  <section class="search__form-section">
+    <h1 class="search__title">Wyszukaj lot</h1>
+
+    <form class="search__form"
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()">
+      <div class="search__row">
+        <mat-form-field class="search__field"
+                        appearance="outline">
+          <mat-label>Skąd</mat-label>
+          <input matInput
+                 formControlName="origin"
+                 placeholder="np. WAW"
+                 maxlength="3" />
+          <mat-icon matSuffix>flight_takeoff</mat-icon>
+          <mat-error>Wymagany kod IATA (3 litery)</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="search__field"
+                        appearance="outline">
+          <mat-label>Dokąd</mat-label>
+          <input matInput
+                 formControlName="destination"
+                 placeholder="np. LHR"
+                 maxlength="3" />
+          <mat-icon matSuffix>flight_land</mat-icon>
+          <mat-error>Wymagany kod IATA (3 litery)</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="search__row">
+        <mat-form-field class="search__field"
+                        appearance="outline">
+          <mat-label>Data wylotu</mat-label>
+          <input matInput
+                 [matDatepicker]="departurePicker"
+                 formControlName="departureDate"
+                 readonly />
+          <mat-datepicker-toggle matIconSuffix
+                                 [for]="departurePicker" />
+          <mat-datepicker #departurePicker />
+          <mat-error>Wymagana data wylotu</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="search__field"
+                        appearance="outline">
+          <mat-label>Data powrotu</mat-label>
+          <input matInput
+                 [matDatepicker]="returnPicker"
+                 formControlName="returnDate"
+                 readonly />
+          <mat-datepicker-toggle matIconSuffix
+                                 [for]="returnPicker" />
+          <mat-datepicker #returnPicker />
+        </mat-form-field>
+      </div>
+
+      <div class="search__row">
+        <mat-form-field class="search__field"
+                        appearance="outline">
+          <mat-label>Pasażerowie</mat-label>
+          <input matInput
+                 type="number"
+                 formControlName="passengers"
+                 min="1"
+                 max="9" />
+          <mat-error>Podaj liczbę pasażerów (1-9)</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="search__field"
+                        appearance="outline">
+          <mat-label>Klasa kabiny</mat-label>
+          <mat-select formControlName="cabinClass">
+            @for (cabin of cabinClasses; track cabin) {
+            <mat-option [value]="cabin">{{ cabinClassLabels[cabin] }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button class="search__submit"
+              mat-flat-button
+              type="submit"
+              [disabled]="form.invalid || loading()">
+        @if (loading()) {
+        <mat-spinner diameter="20" />
+        } @else {
+        <span class="search__submit-content">
+          <mat-icon>search</mat-icon>
+          Szukaj lotów
+        </span>
+        }
+      </button>
+    </form>
+  </section>
+
+  @if (errorMessage()) {
+  <div class="search__error">{{ errorMessage() }}</div>
+  }
+
+  @if (searched() && !loading()) {
+  <section class="search__results">
+    <h2 class="search__results-title">
+      @if (offers().length === 0) {
+      Nie znaleziono lotów
+      } @else {
+      Znaleziono {{ offers().length }} ofert
+      }
+    </h2>
+
+    <div class="search__offers">
+      @for (offer of offers(); track offer.offerId) {
+      <div class="offer">
+        <div class="offer__airline">
+          <span class="offer__airline-code">{{ offer.airlineCode }}</span>
+          <span class="offer__airline-name">{{ offer.airlineName }}</span>
+        </div>
+
+        <div class="offer__slices">
+          @for (slice of offer.slices; track $index) {
+          <div class="offer__slice">
+            <div class="offer__route">
+              <span class="offer__airport">{{ slice.origin }}</span>
+              <div class="offer__line">
+                <span class="offer__stops-label">{{ stopsLabel(slice.stops) }}</span>
+                <div class="offer__line-bar"></div>
+                <mat-icon class="offer__plane-icon">flight</mat-icon>
+              </div>
+              <span class="offer__airport">{{ slice.destination }}</span>
+            </div>
+
+            <div class="offer__times">
+              <span class="offer__time">{{ slice.departureAt | date:'HH:mm' }}</span>
+              <span class="offer__duration">{{ formatDuration(slice.duration) }}</span>
+              <span class="offer__time">{{ slice.arrivingAt | date:'HH:mm' }}</span>
+            </div>
+
+            <div class="offer__dates">
+              <span>{{ slice.departureAt | date:'d MMM yyyy' }}</span>
+              <span>{{ slice.arrivingAt | date:'d MMM yyyy' }}</span>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="offer__price">
+          <span class="offer__amount">{{ offer.totalAmount }} {{ offer.totalCurrency }}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+  }
+</div>

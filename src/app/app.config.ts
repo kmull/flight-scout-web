@@ -1,12 +1,17 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
+import { registerLocaleData } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { loggingInterceptor } from './interceptors/logging.interceptor';
-import { authInterceptor } from './interceptors/auth.interceptor';
+import localePl from '@angular/common/locales/pl';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { routes } from './app.routes';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { loggingInterceptor } from './interceptors/logging.interceptor';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
+registerLocaleData(localePl);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +27,7 @@ export const appConfig: ApplicationConfig = {
       preventDuplicates: true
     }),
     provideAnimations(),
+    provideNativeDateAdapter(),
+    { provide: LOCALE_ID, useValue: 'pl' }
   ]
 };
