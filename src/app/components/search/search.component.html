@@ -5,28 +5,15 @@
     <form class="search__form"
           [formGroup]="form"
           (ngSubmit)="onSubmit()">
-      <div class="search__row">
-        <mat-form-field class="search__field"
-                        appearance="outline">
-          <mat-label>Skąd</mat-label>
-          <input matInput
-                 formControlName="origin"
-                 placeholder="np. WAW"
-                 maxlength="3" />
-          <mat-icon matSuffix>flight_takeoff</mat-icon>
-          <mat-error>Wymagany kod IATA (3 litery)</mat-error>
-        </mat-form-field>
 
-        <mat-form-field class="search__field"
-                        appearance="outline">
-          <mat-label>Dokąd</mat-label>
-          <input matInput
-                 formControlName="destination"
-                 placeholder="np. LHR"
-                 maxlength="3" />
-          <mat-icon matSuffix>flight_land</mat-icon>
-          <mat-error>Wymagany kod IATA (3 litery)</mat-error>
-        </mat-form-field>
+      <div class="search__row">
+        <app-airport-autocomplete formControlName="origin"
+                                  label="Skąd"
+                                  icon="flight_takeoff" />
+
+        <app-airport-autocomplete formControlName="destination"
+                                  label="Dokąd"
+                                  icon="flight_land" />
       </div>
 
       <div class="search__row">
@@ -45,7 +32,7 @@
 
         <mat-form-field class="search__field"
                         appearance="outline">
-          <mat-label>Data powrotu</mat-label>
+          <mat-label>Data powrotu (opcjonalna)</mat-label>
           <input matInput
                  [matDatepicker]="returnPicker"
                  formControlName="returnDate"
@@ -92,6 +79,7 @@
         </span>
         }
       </button>
+
     </form>
   </section>
 
@@ -112,6 +100,7 @@
     <div class="search__offers">
       @for (offer of offers(); track offer.offerId) {
       <div class="offer">
+
         <div class="offer__airline">
           <span class="offer__airline-code">{{ offer.airlineCode }}</span>
           <span class="offer__airline-name">{{ offer.airlineName }}</span>
@@ -125,17 +114,14 @@
               <div class="offer__line">
                 <span class="offer__stops-label">{{ stopsLabel(slice.stops) }}</span>
                 <div class="offer__line-bar"></div>
-                <mat-icon class="offer__plane-icon">flight</mat-icon>
               </div>
               <span class="offer__airport">{{ slice.destination }}</span>
             </div>
-
             <div class="offer__times">
               <span class="offer__time">{{ slice.departureAt | date:'HH:mm' }}</span>
               <span class="offer__duration">{{ formatDuration(slice.duration) }}</span>
               <span class="offer__time">{{ slice.arrivingAt | date:'HH:mm' }}</span>
             </div>
-
             <div class="offer__dates">
               <span>{{ slice.departureAt | date:'d MMM yyyy' }}</span>
               <span>{{ slice.arrivingAt | date:'d MMM yyyy' }}</span>
@@ -147,6 +133,7 @@
         <div class="offer__price">
           <span class="offer__amount">{{ offer.totalAmount }} {{ offer.totalCurrency }}</span>
         </div>
+
       </div>
       }
     </div>

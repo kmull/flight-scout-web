@@ -1,0 +1,21 @@
+<mat-form-field class="airport-field"
+                appearance="outline">
+  <mat-label>{{ label() }}</mat-label>
+  <input matInput
+         [value]="displayValue()"
+         [matAutocomplete]="auto"
+         [disabled]="isDisabled()"
+         (input)="onInput($event)"
+         (blur)="onBlur()" />
+  <mat-icon matSuffix>{{ icon() }}</mat-icon>
+  <mat-autocomplete #auto="matAutocomplete">
+    @for (airport of suggestions(); track airport.iataCode) {
+    <mat-option [value]="airport.label"
+                (onSelectionChange)="onSelect(airport)">
+      <span class="airport-option__city">{{ airport.city }}</span>
+      <span class="airport-option__name">{{ airport.name }}</span>
+      <span class="airport-option__code">{{ airport.iataCode }}</span>
+    </mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>

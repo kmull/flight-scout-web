@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,12 +10,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
 import { CabinClass, CabinClassLabels } from '../../enums/cabin-class.enum';
+import { AirportDto } from '../../models/airport.model';
 import { FlightOfferDto } from '../../models/flight.model';
+import { AirportService } from '../../services/airport.service';
 import { FlightService } from '../../services/flight.service';
+import { AirportAutocompleteComponent } from '../shared/airport-autocomplete/airport-autocomplete.component';
 
 @Component({
-  selector: 'app-search.component',
+  selector: 'app-search',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -24,16 +30,15 @@ import { FlightService } from '../../services/flight.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatDatepickerModule,
-    DatePipe
+    DatePipe,
+    AirportAutocompleteComponent
   ],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.scss',
+  styleUrl: './search.component.scss'
 })
 export class SearchComponent {
-
   private fb = inject(FormBuilder);
   private flightService = inject(FlightService);
-  private toastrService = inject(ToastrService);
 
   offers = signal<FlightOfferDto[]>([]);
   loading = signal(false);
@@ -44,31 +49,28 @@ export class SearchComponent {
   cabinClassLabels = CabinClassLabels;
 
   form = this.fb.group({
-    origin: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-    destination: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-    departureDate: ['', Validators.required],
-    returnDate: [''],
+    origin: [null, Validators.required],
+    destination: [null, Validators.required],
+    departureDate: [null, Validators.required],
+    returnDate: [null],
     passengers: [1, [Validators.required, Validators.min(1), Validators.max(9)]],
     cabinClass: [CabinClass.ECONOMY, Validators.required]
   });
 
   onSubmit(): void {
-    if (this.form.invalid) {
-      this.toastrService.error('Wypełnij wszystkie wymagane pola poprawnie.', 'Błąd walidacji');
-      return;
-    }
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
 
+    const val = this.form.value;
     this.loading.set(true);
     this.errorMessage.set(null);
     this.offers.set([]);
 
-    const val = this.form.value;
-
     this.flightService.search({
-      origin: val.origin!.toUpperCase(),
-      destination: val.destination!.toUpperCase(),
-      departureDate: this.formatDate(val.departureDate as unknown as Date)!,
-      returnDate: this.formatDate(val.returnDate as unknown as Date),
+      origin: val.origin!,
+      destination: val.destination!,
+      departureDate: this.formatDate(val.departureDate),
+      returnDate: this.formatDate(val.returnDate) || undefined,
       passengers: val.passengers!,
       cabinClass: val.cabinClass!,
       limit: 20
@@ -83,7 +85,12 @@ export class SearchComponent {
         this.loading.set(false);
       }
     });
+  }
 
+  private formatDate(date: any): string {
+    if (!date) return '';
+    if (date instanceof Date) return date.toISOString().split('T')[0];
+    return date;
   }
 
   formatDuration(iso: string): string {
@@ -100,10 +107,4 @@ export class SearchComponent {
     if (stops === 1) return '1 przesiadka';
     return `${stops} przesiadki`;
   }
-
-  private formatDate(date: Date | null): string | undefined {
-    if (!date) return undefined;
-    return date.toISOString().split('T')[0];
-  }
-
 }
