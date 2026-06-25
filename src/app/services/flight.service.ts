@@ -25,6 +25,6 @@ export class FlightService {
       params = params.set('returnDate', request.returnDate);
     }
 
-    return this.http.get<FlightOfferDto[]>(this.API_URL, { params });
+    return this.http.get<FlightOfferDto[]>(`${this.API_URL}/search`, { params });
   }
 }
